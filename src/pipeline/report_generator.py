@@ -8,11 +8,8 @@ import logging
 import os
 from datetime import datetime
 
-from dotenv import load_dotenv
-from openai import OpenAI
+from src.config import get_model, get_openai_client
 
-load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = """\
@@ -81,13 +78,11 @@ def generate_report(
 ) -> str:
     """Generate a market entry report from KG context."""
     if model is None:
-        model = os.getenv("OPENAI_MODEL_DEV", "gpt-4o-mini")
+        model = get_model()
+    else:
+        model = get_model(model)
 
-    base_url = os.getenv("OPENAI_BASE_URL")
-    client = OpenAI(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=base_url if base_url else None,
-    )
+    client = get_openai_client()
 
     user_prompt = REPORT_TEMPLATE.format(nace_4digit=nace_4digit, context=context)
 

@@ -24,23 +24,13 @@ Relationships:
 """
 
 import logging
-import os
 from pathlib import Path
 
 import pandas as pd
-from dotenv import load_dotenv
-from neo4j import GraphDatabase
 
-load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+from src.config import get_neo4j_driver
+
 log = logging.getLogger(__name__)
-
-
-def get_driver():
-    uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-    user = os.getenv("NEO4J_USER", "neo4j")
-    password = os.getenv("NEO4J_PASSWORD", "password")
-    return GraphDatabase.driver(uri, auth=(user, password))
 
 
 def clear_database(driver):
@@ -304,7 +294,7 @@ def run(data_dir: str = "data"):
     firms = pd.read_parquet(data / "firms_cleaned.parquet")
     industry_agg = pd.read_parquet(data / "industry_aggregates.parquet")
 
-    driver = get_driver()
+    driver = get_neo4j_driver()
     try:
         clear_database(driver)
         create_indexes(driver)

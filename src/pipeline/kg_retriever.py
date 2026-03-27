@@ -7,23 +7,9 @@ with optional cross-industry comparison.
 """
 
 import logging
-import os
-from textwrap import dedent
 
-import pandas as pd
-from dotenv import load_dotenv
-from neo4j import GraphDatabase
-
-load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
-
-
-def get_driver():
-    uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-    user = os.getenv("NEO4J_USER", "neo4j")
-    password = os.getenv("NEO4J_PASSWORD", "password")
-    return GraphDatabase.driver(uri, auth=(user, password))
 
 
 def _run_query(driver, query: str, **params) -> list[dict]:
