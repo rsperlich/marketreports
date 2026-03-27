@@ -1,0 +1,7 @@
+pyreadr
+pandas
+numpy
+neo4j
+openai
+python-dotenv
+pyarrow
